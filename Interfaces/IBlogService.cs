@@ -4,11 +4,11 @@ namespace ToDoList.Interfaces
 {
     public interface IBlogService 
     {
-        List<Blog> GetAll();
-        List<Blog> GetBlogsByUserId(string userId);
-        Blog GetBlogById(int id, string userId);
-        void AddBlog(Blog todo, string userId);
-        void UpdateBlog(Blog todo, string userId);
+        List<Blogs> GetAll();
+        List<Blogs> GetBlogsByUserId(string userId);
+        Blogs GetBlogById(int id, string userId);
+        void AddBlog(Blogs todo, string userId);
+        void UpdateBlog(Blogs todo, string userId);
         void DeleteBlog(int id, string userId);
 
 

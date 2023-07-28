@@ -31,7 +31,7 @@ namespace ToDoList.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IEnumerable<Blog>> GetAll() 
+        public ActionResult<IEnumerable<Blogs>> GetAll() 
         {
             var allTodos = _blogService.GetAll();
 
@@ -41,11 +41,12 @@ namespace ToDoList.Controllers
 
 
         // GET: api/blogs
-        [Authorize]
+        //[Authorize]
         [HttpGet]
-        public ActionResult<IEnumerable<Blog>> GetBlogs()
+        public ActionResult<IEnumerable<Blogs>> GetBlogs()
         {
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
             var todos = _blogService.GetBlogsByUserId(userId);
 
             return Ok(todos);
@@ -53,9 +54,9 @@ namespace ToDoList.Controllers
 
 
         // GET: api/blogs/{id}
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
-        public ActionResult<Blog> GetBlog(int id)
+        public ActionResult<Blogs> GetBlog(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var todo = _blogService.GetBlogById(id, userId);
@@ -69,9 +70,9 @@ namespace ToDoList.Controllers
         }
 
         // PUT: api/blogs/{id}
-        [Authorize]
+        //[Authorize]
         [HttpPost, Consumes("multipart/form-data")]
-        public async Task<ActionResult<Blog>> PostBlog([FromForm]BlogViewModel blogViewModel)
+        public async Task<ActionResult<Blogs>> PostBlog([FromForm]BlogViewModel blogViewModel)
         {
             if (!this.ModelState.IsValid) 
             {
@@ -79,8 +80,9 @@ namespace ToDoList.Controllers
             }
 
 
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            string imageUrl = null;
+            //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
+            string imageUrl = "";
 
             string containerName = _configuration.GetValue<string>("Azure:BlobStorage:ContainerName");
 
@@ -91,7 +93,7 @@ namespace ToDoList.Controllers
             }
 
 
-            Blog blog = new Blog
+            Blogs blog = new Blogs
             {
                 Title = blogViewModel.Title,
                 Description = blogViewModel.Description,
@@ -108,7 +110,7 @@ namespace ToDoList.Controllers
         }
 
         // PUT: api/blogs/{id}
-        [Authorize]
+        //[Authorize]
         [HttpPut("{id}"), Consumes("multipart/form-data")]
         public async Task<IActionResult> PutBlog(int id, [FromForm]BlogViewModel blogViewModel)
         {
@@ -136,7 +138,7 @@ namespace ToDoList.Controllers
 
           
 
-            Blog blog = new Blog
+            Blogs blog = new Blogs
             {
                 Id = blogViewModel.Id,
                 Title = blogViewModel.Title,
@@ -154,7 +156,7 @@ namespace ToDoList.Controllers
         }
 
         // DELETE: api/blogs/{id}
-        [Authorize]
+        //[Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteBlog(int id)
         {

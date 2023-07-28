@@ -17,12 +17,12 @@ namespace ToDoList.Services
             this.cacheService = cacheService;
         }
 
-        public List<Blog> GetAll()
+        public List<Blogs> GetAll()
         {
             var cacheKey = "GetAllBlogs";
-            if (!cacheService.TryGetValue(cacheKey, out List<Blog> blogs))
+            if (!cacheService.TryGetValue(cacheKey, out List<Blogs> blogs))
             {
-                blogs = this.context.Set<Blog>().ToList();
+                blogs = this.context.Set<Blogs>().ToList();
                 cacheService.Set(cacheKey, blogs, TimeSpan.FromMinutes(20));
             }
 
@@ -31,26 +31,26 @@ namespace ToDoList.Services
         }
 
 
-        public List<Blog> GetBlogsByUserId(string userId)
+        public List<Blogs> GetBlogsByUserId(string userId)
         {
-            return this.context.Set<Blog>().Where(todo => todo.UserId == userId).ToList();
+            return this.context.Set<Blogs>().Where(todo => todo.UserId == userId).ToList();
         }
 
-        public Blog GetBlogById(int id, string userId)
+        public Blogs GetBlogById(int id, string userId)
         {
-            return this.context.Set<Blog>().SingleOrDefault(todo => todo.Id == id && todo.UserId == userId);
+            return this.context.Set<Blogs>().SingleOrDefault(todo => todo.Id == id && todo.UserId == userId);
         }
 
-        public void AddBlog(Blog todo, string userId)
+        public void AddBlog(Blogs todo, string userId)
         {
             todo.UserId = userId;
-            this.context.Set<Blog>().Add(todo);
+            this.context.Set<Blogs>().Add(todo);
             this.context.SaveChanges();
         }
 
-        public void UpdateBlog(Blog todo, string userId)
+        public void UpdateBlog(Blogs todo, string userId)
    {
-            var existingTodo = this.context.Set<Blog>().SingleOrDefault(t => t.Id == todo.Id && t.UserId == userId);
+            var existingTodo = this.context.Set<Blogs>().SingleOrDefault(t => t.Id == todo.Id && t.UserId == userId);
             if (todo.ImageUrl == null) 
             {
                 todo.ImageUrl = existingTodo?.ImageUrl;
@@ -65,10 +65,10 @@ namespace ToDoList.Services
 
         public void DeleteBlog(int id, string userId)
         {
-            var todo = this.context.Set<Blog>().SingleOrDefault(t => t.Id == id && t.UserId == userId);
+            var todo = this.context.Set<Blogs>().SingleOrDefault(t => t.Id == id && t.UserId == userId);
             if (todo != null)
             {
-                this.context.Set<Blog>().Remove(todo);
+                this.context.Set<Blogs>().Remove(todo);
                 this.context.SaveChanges();
             }
         }

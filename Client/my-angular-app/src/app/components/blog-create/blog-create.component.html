@@ -1,0 +1,17 @@
+<p>blog-create works!</p>
+<form [formGroup]="blogForm" (ngSubmit)="createBlog()">
+  <label>
+    Title:
+    <input type="text" formControlName="title">
+  </label>
+  <label>
+    Content:
+    <textarea formControlName="content"></textarea>
+  </label>
+  <label>
+    Upload image:
+    <input type="file" (change)="onFileSelected($event)">
+  </label>
+  <button type="submit">Submit</button>
+</form>
+

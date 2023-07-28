@@ -11,7 +11,7 @@ namespace ToDoList.Data
         {
         }
 
-        public DbSet<Blog> Todo { get; set; }
+        public DbSet<Blogs> Blog { get; set; }
 
 
     }
