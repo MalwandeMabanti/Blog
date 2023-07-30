@@ -116,6 +116,7 @@
 
                 let file = e.target.files[0];
                 todo.newImage = file;
+                newTodo.file = true;
         };
 
         const updateTodo = (todo) => {
@@ -135,7 +136,7 @@
 
             console.log(formData.get('description'), " Your Description");
 
-            if (todo.file) {
+            if (newTodo.file) {
                 formData.append('image', todo.newImage);
                 console.log(formData.get('image') , " Your Image");
                 }

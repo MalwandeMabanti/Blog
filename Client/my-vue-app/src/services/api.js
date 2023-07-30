@@ -24,8 +24,13 @@ apiClient.interceptors.request.use((config) => {
 });
 
 export default {
+
+    getAllTodos() {
+        return apiClient.get('/Blogs/all')
+    },
+
     getTodos() {
-        return apiClient.get('/Blogs');
+        return apiClient.get('/Blogs/myblogs');
     },
 
     createTodo(formData) {

@@ -18,7 +18,7 @@ namespace ToDoList
         public AuthenticationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<AuthenticationDbContext>();
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=todo_authentication;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=master;Trusted_Connection=True;");
 
             return new AuthenticationDbContext(optionsBuilder.Options);
         }

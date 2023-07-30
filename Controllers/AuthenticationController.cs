@@ -35,8 +35,23 @@ public class AuthenticationController : ControllerBase
             return BadRequest(this.ModelState);
         }
 
+        BlogUser existingUser = null;
+        try
+        {
+            existingUser = await this._userManager.FindByEmailAsync(model.Email);
+            Console.WriteLine(existingUser + " Something");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
 
-        var existingUser = await this._userManager.FindByEmailAsync(model.Email);
+
+
+        //var existingUser = await this._userManager.FindByEmailAsync(model.Email);
+
+        Console.WriteLine(existingUser);
+
 
         if (existingUser != null) 
         {

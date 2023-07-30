@@ -30,7 +30,7 @@
 
 <script>
     import { ref } from 'vue';
-    import UserService from '../UserService';
+    import UserService from '../services/UserService';
 
     export default {
         name: "RegistrationForm",

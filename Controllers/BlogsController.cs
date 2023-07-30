@@ -41,12 +41,12 @@ namespace ToDoList.Controllers
 
 
         // GET: api/blogs
-        //[Authorize]
-        [HttpGet]
+        [Authorize]
+        [HttpGet("myblogs")]
         public ActionResult<IEnumerable<Blogs>> GetBlogs()
         {
-            //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
             var todos = _blogService.GetBlogsByUserId(userId);
 
             return Ok(todos);
@@ -54,7 +54,7 @@ namespace ToDoList.Controllers
 
 
         // GET: api/blogs/{id}
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Blogs> GetBlog(int id)
         {
@@ -70,7 +70,7 @@ namespace ToDoList.Controllers
         }
 
         // PUT: api/blogs/{id}
-        //[Authorize]
+        [Authorize]
         [HttpPost, Consumes("multipart/form-data")]
         public async Task<ActionResult<Blogs>> PostBlog([FromForm]BlogViewModel blogViewModel)
         {
@@ -80,8 +80,8 @@ namespace ToDoList.Controllers
             }
 
 
-            //string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
             string imageUrl = "";
 
             string containerName = _configuration.GetValue<string>("Azure:BlobStorage:ContainerName");
@@ -110,7 +110,7 @@ namespace ToDoList.Controllers
         }
 
         // PUT: api/blogs/{id}
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}"), Consumes("multipart/form-data")]
         public async Task<IActionResult> PutBlog(int id, [FromForm]BlogViewModel blogViewModel)
         {
@@ -123,6 +123,7 @@ namespace ToDoList.Controllers
             }
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
 
 
             string? imageUrl = null;
@@ -156,7 +157,7 @@ namespace ToDoList.Controllers
         }
 
         // DELETE: api/blogs/{id}
-        //[Authorize]
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteBlog(int id)
         {

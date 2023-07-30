@@ -13,48 +13,57 @@
                 <br />
                 <button type="submit">Log in</button>
             </form>
-            <router-link to="/register">Don't have an account? Register</router-link>
+            <a href="/register">Don't have an account? Register</a>
         </div>
+        
         <div v-for="todo in todos" :key="todo.id">
 
             <h2 @click="toggleDetails(todo)">{{ todo.title }}</h2>
 
             <div v-if="todo.showDetails">
 
-                <img v-if="!todo.isEditing" :src="todo.imageUrl" class="todo-image" />
+                <img :src="todo.imageUrl" class="todo-image" />
                 <p>{{ todo.description }}</p>
 
             </div>
-
-
         </div>
+        
+        
+
     </div>
 </template>
 
 <script>
     import { ref, onMounted } from 'vue';
-    import { useRouter } from 'vue-router';
-    import UserService from '../UserService';
-    import api from '../api';
+    //import { useRouter } from 'vue-router';
+    import UserService from '../services/UserService';
+    import api from '../services/api';
 
     export default {
         name: "LoginForm",
         setup() {
             const loginEmail = ref('');
             const loginPassword = ref('');
-            const router = useRouter();
+            //const router = useRouter();
             const todos = ref([]);
 
             const login = async () => {
+                console.log('login function called');
                 try {
                     const response = await UserService.login({
                         Email: loginEmail.value,
                         Password: loginPassword.value,
                     });
 
+
+
                     if (response.status === 200) {
-                        console.log("Yey!! You have managed to log in");
-                        router.push('/todolist');
+                        localStorage.setItem('token', response.data.token);
+
+                        window.location.href = '/blogpost';
+
+                       
+                        
                     }
                 } catch (error) {
                     if (error.response) {
@@ -76,6 +85,7 @@
                         ...todo,
                         showDetails: false
                     }));
+                    console.log(todos.value);
                 });
             };
 
@@ -85,13 +95,13 @@
 
             onMounted(getAllTodos);
 
-
             return {
                 loginEmail,
                 loginPassword,
                 login,
                 getAllTodos,
-                toggleDetails
+                toggleDetails,
+                todos
             };
         }
     };

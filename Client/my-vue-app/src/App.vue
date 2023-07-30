@@ -1,17 +1,13 @@
 <template>
- 
-  <BlogPost/>
+    <div id="app">
+        <router-view />
+    </div>
 </template>
 
 <script>
-import BlogPost from './components/BlogPost'
-
 
 export default {
   name: 'App',
-  components: {
-    BlogPost
-  }
 }
 </script>
 
