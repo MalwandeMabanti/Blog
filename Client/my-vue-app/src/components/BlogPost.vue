@@ -1,50 +1,50 @@
 <template>
-    <div>
-        <h2>Add a Blog</h2>
-        <button @click="logout">Logout</button>
-        <div>
+    <div class="container">
+        <header>
+            <h2>Add a Blog</h2>
+            <button class="logout-button" @click="logout">Logout</button>
+        </header>
 
-            <form @submit.prevent="addBlog">
+        <section>
+            <form class="blog-form" @submit.prevent="addBlog">
+                <label>
+                    Title: 
+                    <input class="title-input" v-model="newBlog.title" type="text" placeholder="New Blog Title" />
+                </label>
 
-                <input class="title-input" v-model="newBlog.title" type="text" placeholder="New Blog Title" /><br />
-                <br />
-                <textarea class="description-input" v-model="newBlog.description" placeholder="New Blog Body"></textarea><br />
+                <label>
+                    Body: 
+                    <textarea class="description-input" v-model="newBlog.description" placeholder="New Blog Body"></textarea>
+                </label>
+
                 <label for="image">Select image:</label>
                 <input id="image" type="file" @change="onFileChange" />
-                <br />
+
                 <button type="submit">Add Blog</button>
             </form>
+        </section>
 
-
-            <div v-for="blog in blogs" :key="blog.id">
-
-                <h2 @click="toggleDetails(blog)">{{ blog.title }}</h2>
-
-                <div v-if="blog.showDetails">
-
-
+        <section>
+            <div class="blogs-list" v-for="blog in blogs" :key="blog.id">
+                <h2 class="blog-title" @click="toggleDetails(blog)">{{ blog.title }}</h2>
+                <div class="blog-details" v-if="blog.showDetails">
                     <input v-if="blog.isEditing" v-model="blog.title" type="text" />
-
                     <img v-show="!blog.isEditing" :src="blog.imageUrl" class="blog-image" />
                     <input v-show="blog.isEditing" type="file" @change="onEditFileChange(blog, $event)" />
-
                     <p>{{ blog.isEditing ? '' : blog.description }}</p>
                     <textarea v-if="blog.isEditing" v-model="blog.description"></textarea>
-
-                    <button @click="removeBlog(blog)">Remove Blog</button>
-
-                    <button @click="blog.isEditing ? updateBlog(blog) : editBlog(blog)">
-                        {{blog.isEditing ? 'Save' : 'Edit'}}
-                    </button>
-
-
-
+                    <div class="blog-actions">
+                        <button @click="removeBlog(blog)">Remove Blog</button>
+                        <button @click="blog.isEditing ? updateBlog(blog) : editBlog(blog)">
+                            {{blog.isEditing ? 'Save' : 'Edit'}}
+                        </button>
+                    </div>
                 </div>
             </div>
-
-        </div>
+        </section>
     </div>
 </template>
+
 
 <script>
     import { ref, reactive, onMounted } from 'vue';
@@ -198,47 +198,86 @@
     };
 
 </script>
-<style scoped>
-    th {
-        padding: 40px;
+<style>
+
+    .container {
+        width: 80%;
+        margin: auto;
+        font-family: Arial, sans-serif;
     }
 
-    td {
-        text-align: center;
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
     }
 
-    .description-input {
-        width: 300px;
-        height: 50px;
-        padding: 10px;
+    h2 {
+        margin: 0;
     }
 
-    .description-input {
-        resize: none;
-        overflow: hidden;
-        min-height: 50px;
-        max-height: 200px;
+    .logout-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
     }
 
-    .title-input {
-        width: 315px;
-        height: 20px;
+    .blog-form {
+        padding: 20px;
+        margin-bottom: 20px;
     }
 
-    tbody tr:nth-child(2n) {
-        background-color: white;
+        .blog-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .blog-form input,
+        .blog-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+    .blogs-list {
+        border-bottom: 1px solid #dee2e6;
+        padding: 20px 0;
     }
 
-    tbody tr:nth-child(2n+1) {
-        background-color: lightgrey;
+    .blog-title {
+        cursor: pointer;
     }
 
-    .completed-column {
-        width: 20px;
+    .blog-details {
+        margin-top: 20px;
     }
 
     .blog-image {
-        width: 100px;
-        height: 100px;
+        max-width: 100%;
+        height: auto;
     }
+
+    .blog-actions {
+        margin-top: 20px;
+    }
+
+        .blog-actions button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+
 </style>

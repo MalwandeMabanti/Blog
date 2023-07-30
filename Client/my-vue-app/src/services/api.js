@@ -48,5 +48,9 @@ export default {
 
     removeBlog(blog) {
         return apiClient.delete(`/Blogs/${blog.id}`);
+    },
+
+    searchBlogs(term) {
+        return apiClient.get(`/Blogs/search?term=${term}`);
     }
 };

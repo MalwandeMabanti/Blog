@@ -11,6 +11,8 @@ namespace ToDoList.Interfaces
         void UpdateBlog(Blogs blog, string userId);
         void DeleteBlog(int id, string userId);
 
+        IEnumerable<Blogs> SearchBlogs(string term);
+
 
     }
 }

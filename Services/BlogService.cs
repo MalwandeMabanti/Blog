@@ -73,5 +73,11 @@ namespace ToDoList.Services
                 this.context.SaveChanges();
             }
         }
+
+        public IEnumerable<Blogs> SearchBlogs(string term)
+        {
+            return this.context.Blog.Where(b => b.Title.Contains(term)).ToList();
+        }
+
     }
 }

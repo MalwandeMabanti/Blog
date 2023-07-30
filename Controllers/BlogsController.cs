@@ -167,6 +167,25 @@ namespace ToDoList.Controllers
             return NoContent();
         }
 
+        // GET: api/blogs/search?term={term}
+        [HttpGet("search")]
+        public ActionResult<IEnumerable<Blogs>> SearchBlogs(string term)
+        {
+            
+            var blogs = _blogService.SearchBlogs(term);
+
+            if (blogs == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(blogs);
+        }
+
+
 
     }
+
 }
+
+
