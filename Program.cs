@@ -1,5 +1,7 @@
 
 
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +36,11 @@ namespace ToDoList
             builder.Services.AddIdentity<BlogUser, IdentityRole>()
                 .AddEntityFrameworkStores<AuthenticationDbContext>()
                 .AddDefaultTokenProviders();
+
+            builder.Services.AddControllers().AddFluentValidation(); 
+
+            builder.Services.AddTransient<IValidator<BlogViewModel>, BlogViewModelValidator>(); 
+
 
             builder.Services.AddControllers();
 

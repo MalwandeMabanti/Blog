@@ -22,12 +22,14 @@ namespace ToDoList.Controllers
         private readonly IConfiguration _configuration;
         private readonly IBlogService _blogService;
         private readonly IAzureBlobService _azureBlobService;
+        private readonly IValidator<BlogViewModel> _validator;
 
-        public BlogsController(IConfiguration configuration, IBlogService blogService, IAzureBlobService azureBlobService) 
+        public BlogsController(IConfiguration configuration, IBlogService blogService, IAzureBlobService azureBlobService, IValidator<BlogViewModel> validator) 
         {
             _configuration = configuration;
             _blogService = blogService;
             _azureBlobService = azureBlobService;
+            _validator = validator;
         }
 
         [HttpGet("all")]
@@ -79,6 +81,12 @@ namespace ToDoList.Controllers
                 return BadRequest(ModelState);
             }
 
+            var result = _validator.Validate(blogViewModel, options => options.IncludeRuleSets("Create"));
+            if (!result.IsValid)
+            {
+                return BadRequest(result.Errors);
+            }
+
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
@@ -115,12 +123,12 @@ namespace ToDoList.Controllers
         public async Task<IActionResult> PutBlog(int id, [FromForm]BlogViewModel blogViewModel)
         {
             
-            
-
-            if (id != blogViewModel.Id) 
+            var result = _validator.Validate(blogViewModel, options => options.IncludeRuleSets("Update"));
+            if (!result.IsValid)
             {
-                return BadRequest();
+                return BadRequest(result.Errors);
             }
+
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
