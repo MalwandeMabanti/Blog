@@ -23,19 +23,19 @@ namespace ToDoList.Controllers
         private readonly IBlogService _blogService;
         private readonly IAzureBlobService _azureBlobService;
 
-        public BlogsController(IConfiguration configuration, IBlogService todoService, IAzureBlobService azureBlobService) 
+        public BlogsController(IConfiguration configuration, IBlogService blogService, IAzureBlobService azureBlobService) 
         {
             _configuration = configuration;
-            _blogService = todoService;
+            _blogService = blogService;
             _azureBlobService = azureBlobService;
         }
 
         [HttpGet("all")]
         public ActionResult<IEnumerable<Blogs>> GetAll() 
         {
-            var allTodos = _blogService.GetAll();
+            var allBlogs = _blogService.GetAll();
 
-            return Ok(allTodos);
+            return Ok(allBlogs);
         }
 
 
@@ -47,9 +47,9 @@ namespace ToDoList.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
-            var todos = _blogService.GetBlogsByUserId(userId);
+            var blogs = _blogService.GetBlogsByUserId(userId);
 
-            return Ok(todos);
+            return Ok(blogs);
         }
 
 
@@ -59,14 +59,14 @@ namespace ToDoList.Controllers
         public ActionResult<Blogs> GetBlog(int id)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var todo = _blogService.GetBlogById(id, userId);
+            var blog = _blogService.GetBlogById(id, userId);
 
-            if (todo == null)
+            if (blog == null)
             {
                 return NotFound();
             }
 
-            return Ok(todo);
+            return Ok(blog);
         }
 
         // PUT: api/blogs/{id}

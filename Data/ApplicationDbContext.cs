@@ -16,7 +16,7 @@ namespace ToDoList.Data
 
     }
 
-    public class TodoContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    public class BlogContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
         public ApplicationDbContext CreateDbContext(string[] args)
         {

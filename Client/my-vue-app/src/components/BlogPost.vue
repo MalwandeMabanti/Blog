@@ -1,40 +1,40 @@
 <template>
     <div>
-        <h2>Add a ToDo</h2>
+        <h2>Add a Blog</h2>
         <button @click="logout">Logout</button>
         <div>
 
-            <form @submit.prevent="addTodo">
+            <form @submit.prevent="addBlog">
 
-                <input class="title-input" v-model="newTodo.title" type="text" placeholder="New Todo Title" /><br />
+                <input class="title-input" v-model="newBlog.title" type="text" placeholder="New Blog Title" /><br />
                 <br />
-                <textarea class="description-input" v-model="newTodo.description" placeholder="New Todo Description"></textarea><br />
+                <textarea class="description-input" v-model="newBlog.description" placeholder="New Blog Body"></textarea><br />
                 <label for="image">Select image:</label>
                 <input id="image" type="file" @change="onFileChange" />
                 <br />
-                <button type="submit">Add Todo</button>
+                <button type="submit">Add Blog</button>
             </form>
 
 
-            <div v-for="todo in todos" :key="todo.id">
+            <div v-for="blog in blogs" :key="blog.id">
 
-                <h2 @click="toggleDetails(todo)">{{ todo.title }}</h2>
+                <h2 @click="toggleDetails(blog)">{{ blog.title }}</h2>
 
-                <div v-if="todo.showDetails">
+                <div v-if="blog.showDetails">
 
 
-                    <input v-if="todo.isEditing" v-model="todo.title" type="text" />
+                    <input v-if="blog.isEditing" v-model="blog.title" type="text" />
 
-                    <img v-show="!todo.isEditing" :src="todo.imageUrl" class="todo-image" />
-                    <input v-show="todo.isEditing" type="file" @change="onEditFileChange(todo, $event)" />
+                    <img v-show="!blog.isEditing" :src="blog.imageUrl" class="blog-image" />
+                    <input v-show="blog.isEditing" type="file" @change="onEditFileChange(blog, $event)" />
 
-                    <p>{{ todo.isEditing ? '' : todo.description }}</p>
-                    <textarea v-if="todo.isEditing" v-model="todo.description"></textarea>
+                    <p>{{ blog.isEditing ? '' : blog.description }}</p>
+                    <textarea v-if="blog.isEditing" v-model="blog.description"></textarea>
 
-                    <input type="checkbox" @change="removeTodo(todo)" />
+                    <button @click="removeBlog(blog)">Remove Blog</button>
 
-                    <button @click="todo.isEditing ? updateTodo(todo) : editTodo(todo)">
-                        {{todo.isEditing ? 'Save' : 'Edit'}}
+                    <button @click="blog.isEditing ? updateBlog(blog) : editBlog(blog)">
+                        {{blog.isEditing ? 'Save' : 'Edit'}}
                     </button>
 
 
@@ -53,8 +53,8 @@
 
     export default {
         setup() {
-            const todos = ref([]);
-            const newTodo = reactive({
+            const blogs = ref([]);
+            const newBlog = reactive({
                 title: '',
                 description: '',
                 file: null
@@ -64,40 +64,40 @@
 
             //const router = useRouter();
 
-            const toggleDetails = (todo) => {
-                todo.showDetails = !todo.showDetails;
+            const toggleDetails = (blog) => {
+                blog.showDetails = !blog.showDetails;
             };
 
-            const addTodo = () => {
+            const addBlog = () => {
 
                 const formData = new FormData();
-                formData.append('title', newTodo.title);
-                formData.append('description', newTodo.description);
-                if (newTodo.file) {
-                    formData.append('image', newTodo.file);
+                formData.append('title', newBlog.title);
+                formData.append('description', newBlog.description);
+                if (newBlog.file) {
+                    formData.append('image', newBlog.file);
                 }
 
-                api.createTodo(formData).then((response) => {
-                    todos.value.push(response.data);
-                    newTodo.title = '';
-                    newTodo.description = '';
-                    newTodo.file = null;
+                api.createBlog(formData).then((response) => {
+                    blogs.value.push(response.data);
+                    newBlog.title = '';
+                    newBlog.description = '';
+                    newBlog.file = null;
                 });
             };
 
             const onFileChange = (e) => {
                 console.log(e.target.files[0], "An image was uploaded");
 
-                newTodo.file = e.target.files[0];
+                newBlog.file = e.target.files[0];
             }
 
-            const getTodos = () => {
-                api.getTodos().then((response) => {
-                    todos.value = response.data.map((todo) => ({
-                        ...todo,
+            const getBlogs = () => {
+                api.getBlogs().then((response) => {
+                    blogs.value = response.data.map((blog) => ({
+                        ...blog,
                         isEditing: false,
-                        editingText: todo.title,
-                        imageUrl: todo.imageUrl,
+                        editingText: blog.title,
+                        imageUrl: blog.imageUrl,
                         showDetails: false,
                         file: null,
                         newImage: null
@@ -106,38 +106,38 @@
                 });
             };
 
-            const editTodo = (todo) => {
-                todo.isEditing = true;
-                todo.file = null;
+            const editBlog = (blog) => {
+                blog.isEditing = true;
+                blog.file = null;
             };
 
 
-            const onEditFileChange = (todo, e) => {
+            const onEditFileChange = (blog, e) => {
 
                 let file = e.target.files[0];
-                todo.newImage = file;
-                newTodo.file = true;
+                blog.newImage = file;
+                newBlog.file = true;
         };
 
-        const updateTodo = (todo) => {
+        const updateBlog = (blog) => {
            
 
 
             let formData = new FormData();
-            formData.append('id', todo.id);
+            formData.append('id', blog.id);
 
             console.log(formData.get('id'), " Your Id");
 
-            formData.append('title', todo.title);
+            formData.append('title', blog.title);
 
             console.log(formData.get('title'), " Your Title");
 
-            formData.append('description', todo.description);
+            formData.append('description', blog.description);
 
             console.log(formData.get('description'), " Your Description");
 
-            if (newTodo.file) {
-                formData.append('image', todo.newImage);
+            if (newBlog.file) {
+                formData.append('image', blog.newImage);
                 console.log(formData.get('image') , " Your Image");
                 }
             else {
@@ -149,16 +149,16 @@
         
 
 
-            api.updateTodo(formData).then((response) => {
-                const index = todos.value.findIndex((t) => t.id === response.data.id);
-                if (todos.value[index]) {
-                    todos.value.splice(index, 1, response.data);
-                    todos.value[index].isEditing = false;
-                    todos.value[index].editingText = '';
+            api.updateBlog(formData).then((response) => {
+                const index = blogs.value.findIndex((t) => t.id === response.data.id);
+                if (blogs.value[index]) {
+                    blogs.value.splice(index, 1, response.data);
+                    blogs.value[index].isEditing = false;
+                    blogs.value[index].editingText = '';
                 }
                 if (response.data.imageUrl) {
-                    todo.imageUrl = response.data.imageUrl;
-                    todo.newImage = null;
+                    blog.imageUrl = response.data.imageUrl;
+                    blog.newImage = null;
                 }
             });
     };
@@ -167,9 +167,9 @@
 
 
 
-            const removeTodo = (todo) => {
-                api.removeTodo(todo).then(() => {
-                    todos.value = todos.value.filter((t) => t.id !== todo.id);
+            const removeBlog = (blog) => {
+                api.removeBlog(blog).then(() => {
+                    blogs.value = blogs.value.filter((t) => t.id !== blog.id);
                 });
         };
 
@@ -179,17 +179,17 @@
                 window.location.href = '/';
             }
 
-            onMounted(getTodos);
+            onMounted(getBlogs);
 
             return {
-                todos,
-                newTodo,
-                addTodo,
+                blogs,
+                newBlog,
+                addBlog,
                 onFileChange,
-                getTodos,
-                editTodo,
-                updateTodo,
-                removeTodo,
+                getBlogs,
+                editBlog,
+                updateBlog,
+                removeBlog,
                 logout,
                 onEditFileChange,
                 toggleDetails,
@@ -237,7 +237,7 @@
         width: 20px;
     }
 
-    .todo-image {
+    .blog-image {
         width: 100px;
         height: 100px;
     }

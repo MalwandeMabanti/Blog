@@ -25,32 +25,28 @@ apiClient.interceptors.request.use((config) => {
 
 export default {
 
-    getAllTodos() {
+    getAllBlogs() {
         return apiClient.get('/Blogs/all')
     },
 
-    getTodos() {
+    getBlogs() {
         return apiClient.get('/Blogs/myblogs');
     },
 
-    createTodo(formData) {
+    createBlog(formData) {
         return apiClient.post('/Blogs', formData);
     },
 
-    updateTodo(formData) {
+    updateBlog(formData) {
 
         for (let pair of formData.entries()) {
             console.log(pair[0] + ', ' + pair[1]);
         }
 
-        let some = formData.get("id");
-
-        console.log(`/Blogs/${some}`);
-
         return apiClient.put(`/Blogs/${formData.get("id")}`, formData);
     },
 
-    removeTodo(todo) {
-        return apiClient.delete(`/Todos/${todo.id}`);
+    removeBlog(blog) {
+        return apiClient.delete(`/Blogs/${blog.id}`);
     }
 };

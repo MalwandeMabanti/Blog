@@ -34,42 +34,42 @@ namespace ToDoList.Services
 
         public List<Blogs> GetBlogsByUserId(string userId)
         {
-            return this.context.Set<Blogs>().Where(todo => todo.UserId == userId).ToList();
+            return this.context.Set<Blogs>().Where(blog => blog.UserId == userId).ToList();
         }
 
         public Blogs GetBlogById(int id, string userId)
         {
-            return this.context.Set<Blogs>().SingleOrDefault(todo => todo.Id == id && todo.UserId == userId);
+            return this.context.Set<Blogs>().SingleOrDefault(blog => blog.Id == id && blog.UserId == userId);
         }
 
-        public void AddBlog(Blogs todo, string userId)
+        public void AddBlog(Blogs blog, string userId)
         {
-            todo.UserId = userId;
-            this.context.Set<Blogs>().Add(todo);
+            blog.UserId = userId;
+            this.context.Set<Blogs>().Add(blog);
             this.context.SaveChanges();
         }
 
-        public void UpdateBlog(Blogs todo, string userId)
+        public void UpdateBlog(Blogs blog, string userId)
    {
-            var existingTodo = this.context.Set<Blogs>().SingleOrDefault(t => t.Id == todo.Id && t.UserId == userId);
-            if (todo.ImageUrl == null) 
+            var existingBlog = this.context.Set<Blogs>().SingleOrDefault(t => t.Id == blog.Id && t.UserId == userId);
+            if (blog.ImageUrl == null) 
             {
-                todo.ImageUrl = existingTodo?.ImageUrl;
+                blog.ImageUrl = existingBlog?.ImageUrl;
             }
 
-            if (existingTodo != null)
+            if (existingBlog != null)
             {
-                this.context.Entry(existingTodo).CurrentValues.SetValues(todo);
+                this.context.Entry(existingBlog).CurrentValues.SetValues(blog);
                 this.context.SaveChanges();
             }
         }
 
         public void DeleteBlog(int id, string userId)
         {
-            var todo = this.context.Set<Blogs>().SingleOrDefault(t => t.Id == id && t.UserId == userId);
-            if (todo != null)
+            var blog = this.context.Set<Blogs>().SingleOrDefault(t => t.Id == id && t.UserId == userId);
+            if (blog != null)
             {
-                this.context.Set<Blogs>().Remove(todo);
+                this.context.Set<Blogs>().Remove(blog);
                 this.context.SaveChanges();
             }
         }

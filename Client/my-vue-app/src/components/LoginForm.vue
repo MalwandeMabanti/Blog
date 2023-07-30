@@ -16,14 +16,14 @@
             <a href="/register">Don't have an account? Register</a>
         </div>
         
-        <div v-for="todo in todos" :key="todo.id">
+        <div v-for="blog in blogs" :key="blog.id">
 
-            <h2 @click="toggleDetails(todo)">{{ todo.title }}</h2>
+            <h2 @click="toggleDetails(blog)">{{ blog.title }}</h2>
 
-            <div v-if="todo.showDetails">
+            <div v-if="blog.showDetails">
 
-                <img :src="todo.imageUrl" class="todo-image" />
-                <p>{{ todo.description }}</p>
+                <img :src="blog.imageUrl" class="blog-image" />
+                <p>{{ blog.description }}</p>
 
             </div>
         </div>
@@ -45,7 +45,7 @@
             const loginEmail = ref('');
             const loginPassword = ref('');
             //const router = useRouter();
-            const todos = ref([]);
+            const blogs = ref([]);
 
             const login = async () => {
                 console.log('login function called');
@@ -79,29 +79,29 @@
             };
 
 
-            const getAllTodos = () => {
-                api.getAllTodos().then((response) => {
-                    todos.value = response.data.map((todo) => ({
-                        ...todo,
+            const getAllBlogs = () => {
+                api.getAllBlogs().then((response) => {
+                    blogs.value = response.data.map((blog) => ({
+                        ...blog,
                         showDetails: false
                     }));
-                    console.log(todos.value);
+                    console.log(blogs.value);
                 });
             };
 
-            const toggleDetails = (todo) => {
-                todo.showDetails = !todo.showDetails;
+            const toggleDetails = (blog) => {
+                blog.showDetails = !blog.showDetails;
             };
 
-            onMounted(getAllTodos);
+            onMounted(getAllBlogs);
 
             return {
                 loginEmail,
                 loginPassword,
                 login,
-                getAllTodos,
+                getAllBlogs,
                 toggleDetails,
-                todos
+                blogs
             };
         }
     };
@@ -109,7 +109,7 @@
 
 <style>
 
-    .todo-image {
+    .blog-image {
         width: 100px;
         height: 100px;
     }
