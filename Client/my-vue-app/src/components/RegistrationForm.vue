@@ -22,8 +22,7 @@
                 <input v-model="confirmPassword" type="password" placeholder="Confirm Password" />
             </label>
             <br />
-            <button type="submit">Register</button>
-            <p>Already have an account? <router-link to="/login">Login</router-link></p>
+            <a href="/">Already have an account? Login</a>
         </form>
     </div>
 </template>

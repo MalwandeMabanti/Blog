@@ -48,7 +48,7 @@
 
 <script>
     import { ref, reactive, onMounted } from 'vue';
-    import { useRouter } from 'vue-router';
+    //import { useRouter } from 'vue-router';
     import api from '../services/api';
 
     export default {
@@ -62,7 +62,7 @@
             });
 
 
-            const router = useRouter();
+            //const router = useRouter();
 
             const toggleDetails = (todo) => {
                 todo.showDetails = !todo.showDetails;
@@ -176,7 +176,7 @@
             const logout = () => {
                 console.log("Token being removed is:", localStorage.getItem('token'));
                 localStorage.removeItem('token');
-                router.push('/login');
+                window.location.href = '/';
             }
 
             onMounted(getTodos);
