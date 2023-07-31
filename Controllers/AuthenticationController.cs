@@ -104,6 +104,7 @@ public class AuthenticationController : ControllerBase
 
         var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.GivenName, user.FirstName + " " + user.LastName),
         };
 
         var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],

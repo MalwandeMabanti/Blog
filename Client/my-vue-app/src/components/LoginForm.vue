@@ -23,6 +23,7 @@
                 <h2 class="blog-title" @click="toggleDetails(blog)">{{ blog.title }}</h2>
                 <div class="blog-details" v-if="blog.showDetails">
                     <img :src="blog.imageUrl" class="blog-image" />
+                    <p class="blog-author">Author: {{ blog.author }}</p>
                     <p>{{ blog.description }}</p>
                 </div>
             </div>

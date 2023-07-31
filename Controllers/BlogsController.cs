@@ -48,10 +48,12 @@ namespace ToDoList.Controllers
         public ActionResult<IEnumerable<Blogs>> GetBlogs()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
+
+            var name = User.FindFirstValue(ClaimTypes.GivenName);
+            
             var blogs = _blogService.GetBlogsByUserId(userId);
 
-            return Ok(blogs);
+            return Ok(new { name = name, blogs = blogs });
         }
 
 
@@ -76,19 +78,17 @@ namespace ToDoList.Controllers
         [HttpPost, Consumes("multipart/form-data")]
         public async Task<ActionResult<Blogs>> PostBlog([FromForm]BlogViewModel blogViewModel)
         {
-            if (!this.ModelState.IsValid) 
-            {
-                return BadRequest(ModelState);
-            }
 
             var result = _validator.Validate(blogViewModel, options => options.IncludeRuleSets("Create"));
             if (!result.IsValid)
             {
-                return BadRequest(result.Errors);
+                var errorMessages = result.Errors.Select(error => error.ErrorMessage).ToList();
+                return BadRequest(errorMessages);
             }
 
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string author = User.FindFirstValue(ClaimTypes.GivenName);
             //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
             string imageUrl = "";
 
@@ -106,7 +106,8 @@ namespace ToDoList.Controllers
                 Title = blogViewModel.Title,
                 Description = blogViewModel.Description,
                 UserId = userId,
-                ImageUrl = imageUrl
+                ImageUrl = imageUrl,
+                Author = author,
             };
 
             _blogService.AddBlog(blog, userId);
@@ -124,9 +125,11 @@ namespace ToDoList.Controllers
         {
             
             var result = _validator.Validate(blogViewModel, options => options.IncludeRuleSets("Update"));
+
             if (!result.IsValid)
             {
-                return BadRequest(result.Errors);
+                var errorMessages = result.Errors.Select(error => error.ErrorMessage).ToList();
+                return BadRequest(errorMessages);
             }
 
 

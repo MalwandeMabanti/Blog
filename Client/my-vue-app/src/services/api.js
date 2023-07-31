@@ -38,11 +38,6 @@ export default {
     },
 
     updateBlog(formData) {
-
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
-
         return apiClient.put(`/Blogs/${formData.get("id")}`, formData);
     },
 
@@ -51,6 +46,12 @@ export default {
     },
 
     searchBlogs(term) {
-        return apiClient.get(`/Blogs/search?term=${term}`);
+        if (term !== "") {
+            return apiClient.get(`/Blogs/search?term=${term}`);
+        } else {
+            
+            return apiClient.get('/Blogs/all')
+            
+        }
     }
 };

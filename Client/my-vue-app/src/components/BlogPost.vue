@@ -2,18 +2,26 @@
     <div class="container">
         <header>
             <h2>Add a Blog</h2>
-            <button class="logout-button" @click="logout">Logout</button>
+            <div class="user-info">
+                <span class="username">Welcome {{name}}!</span>
+                <button class="logout-button" @click="logout">Logout</button>
+            </div>
         </header>
 
         <section>
             <form class="blog-form" @submit.prevent="addBlog">
+
+
+                <ul v-if="errors.addBlogError.length">
+                    <li v-for="(error, index) in errors.addBlogError" :key="index">{{ error }}</li>
+                </ul>
                 <label>
-                    Title: 
+                    Title:
                     <input class="title-input" v-model="newBlog.title" type="text" placeholder="New Blog Title" />
                 </label>
 
                 <label>
-                    Body: 
+                    Body:
                     <textarea class="description-input" v-model="newBlog.description" placeholder="New Blog Body"></textarea>
                 </label>
 
@@ -34,6 +42,16 @@
                     <p>{{ blog.isEditing ? '' : blog.description }}</p>
                     <textarea v-if="blog.isEditing" v-model="blog.description"></textarea>
                     <div class="blog-actions">
+
+
+
+                        <ul v-if="errors.updateBlogError[blog.id] && errors.updateBlogError[blog.id].length">
+                            <li v-for="(error, index) in errors.updateBlogError[blog.id]" :key="index">{{ error }}</li>
+                        </ul>
+
+
+
+
                         <button @click="removeBlog(blog)">Remove Blog</button>
                         <button @click="blog.isEditing ? updateBlog(blog) : editBlog(blog)">
                             {{blog.isEditing ? 'Save' : 'Edit'}}
@@ -54,15 +72,21 @@
     export default {
         setup() {
             const blogs = ref([]);
+
+            const name = ref('');
+
             const newBlog = reactive({
                 title: '',
                 description: '',
                 file: null
-
             });
 
+            
 
-            //const router = useRouter();
+            const errors = reactive({
+                addBlogError: [],
+                updateBlogError: {}
+            });
 
             const toggleDetails = (blog) => {
                 blog.showDetails = !blog.showDetails;
@@ -82,18 +106,21 @@
                     newBlog.title = '';
                     newBlog.description = '';
                     newBlog.file = null;
+                }).catch(error => {
+                    if (error.response && error.response.status === 400) {
+                       errors.addBlogError = error.response.data;
+                    }
                 });
             };
 
             const onFileChange = (e) => {
-                console.log(e.target.files[0], "An image was uploaded");
-
                 newBlog.file = e.target.files[0];
             }
 
             const getBlogs = () => {
                 api.getBlogs().then((response) => {
-                    blogs.value = response.data.map((blog) => ({
+                    name.value = response.data.name;
+                    blogs.value = response.data.blogs.map((blog) => ({
                         ...blog,
                         isEditing: false,
                         editingText: blog.title,
@@ -120,21 +147,13 @@
         };
 
         const updateBlog = (blog) => {
-           
-
 
             let formData = new FormData();
             formData.append('id', blog.id);
 
-            console.log(formData.get('id'), " Your Id");
-
             formData.append('title', blog.title);
 
-            console.log(formData.get('title'), " Your Title");
-
             formData.append('description', blog.description);
-
-            console.log(formData.get('description'), " Your Description");
 
             if (newBlog.file) {
                 formData.append('image', blog.newImage);
@@ -144,10 +163,6 @@
                 formData.append('image', "null");
                 console.log(formData.get('image') , " Your Image");
                 }
-
-
-        
-
 
             api.updateBlog(formData).then((response) => {
                 const index = blogs.value.findIndex((t) => t.id === response.data.id);
@@ -160,8 +175,12 @@
                     blog.imageUrl = response.data.imageUrl;
                     blog.newImage = null;
                 }
+            }).catch(error => {
+               if (error.response && error.response.status === 400) {
+                  errors.updateBlogError[blog.id] = error.response.data;
+                }
             });
-    };
+        };
 
 
 
@@ -171,7 +190,7 @@
                 api.removeBlog(blog).then(() => {
                     blogs.value = blogs.value.filter((t) => t.id !== blog.id);
                 });
-        };
+            };
 
             const logout = () => {
                 console.log("Token being removed is:", localStorage.getItem('token'));
@@ -193,6 +212,8 @@
                 logout,
                 onEditFileChange,
                 toggleDetails,
+                errors,
+                name
             };
         },
     };
@@ -214,6 +235,22 @@
         background-color: #f8f9fa;
         border-bottom: 1px solid #dee2e6;
     }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem; 
+    }
+
+    .username {
+        font-size: 1.2rem; 
+        font-weight: 600; 
+        color: #3a3a3a; 
+        padding: 0.5rem; 
+        border-radius: 5px; 
+        background-color: #f5f5f5; 
+    }
+
 
     h2 {
         margin: 0;
@@ -278,6 +315,4 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
-
 </style>

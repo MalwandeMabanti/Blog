@@ -20,14 +20,11 @@ const UserService = {
         return axios.post(`${API_URL}/Login`, userData)
             .then(response => {
                 if (response.data.token) {
-                    // Assuming the token is returned in the response data
                     setAuthToken(response.data.token);
                 }
                 return response;
             });
     },
-
-    // Other user-related API calls can go here
 };
 
 export default UserService;
