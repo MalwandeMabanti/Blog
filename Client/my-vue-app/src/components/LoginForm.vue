@@ -3,10 +3,18 @@
         <header class="login-section">
             <h2>Login</h2>
             <form @submit.prevent="login">
+
+                <div v-if="unuthorizedUserError" class="error-messages">
+                    {{ unuthorizedUserError }}
+                </div>
+
+                <p v-if="!isLoginEmailValid" class="error-messages">Email is required.</p>
                 <label>
                     Email:
                     <input v-model="loginEmail" type="email" />
                 </label>
+
+                <p v-if="!isLoginPasswordValid" class="error-messages">First name is required.</p>
                 <label>
                     Password:
                     <input v-model="loginPassword" type="password" />
@@ -33,7 +41,7 @@
 
 
 <script>
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, onMounted, watch, computed } from 'vue';
     //import { useRouter } from 'vue-router';
     import UserService from '../services/UserService';
     import api from '../services/api';
@@ -46,34 +54,35 @@
             const searchTerm = ref('');
             //const router = useRouter();
             const blogs = ref([]);
+            const unuthorizedUserError = ref(null);
+
+            const isLoginEmailValid = computed(() => loginEmail.value.length > 0);
+            const isLoginPasswordValid = computed(() => loginPassword.value.length > 0);
+
+            const isValidForm = computed(() => isLoginEmailValid.value && isLoginPasswordValid.value);
 
             const login = async () => {
-                console.log('login function called');
-                try {
-                    const response = await UserService.login({
-                        Email: loginEmail.value,
-                        Password: loginPassword.value,
-                    });
+                if (isValidForm.value) {
+
+
+                    try {
+                        const response = await UserService.login({
+                            Email: loginEmail.value,
+                            Password: loginPassword.value,
+                        });
 
 
 
-                    if (response.status === 200) {
-                        localStorage.setItem('token', response.data.token);
+                        if (response.status === 200) {
+                            localStorage.setItem('token', response.data.token);
 
-                        window.location.href = '/blogpost';
+                            window.location.href = '/blogpost';
 
 
 
-                    }
-                } catch (error) {
-                    if (error.response) {
-                        console.log(error.response.data, "Data");
-                        console.log(error.response.status, "Status");
-                        console.log(error.response.headers, "Headers");
-                    } else if (error.request) {
-                        console.log(error.request, "Request");
-                    } else {
-                        console.log('Error', error.message);
+                        }
+                    } catch (error) {
+                        unuthorizedUserError.value = error.response.data
                     }
                 }
             };
@@ -126,6 +135,9 @@
                 searchBlogs,
                 toggleDetails,
                 blogs,
+                isLoginEmailValid,
+                isLoginPasswordValid,
+                unuthorizedUserError
                
 
             };
@@ -213,6 +225,11 @@
     header, main {
         width: 100%;
         display: block;
+    }
+
+    .error-messages {
+        color: red;
+        margin-bottom: 10px;
     }
 </style>
 

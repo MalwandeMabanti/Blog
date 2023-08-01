@@ -3,7 +3,10 @@
         <section class="register-section">
             <h2>Register</h2>
             <form @submit.prevent="register">
-                
+
+                <div v-if="registerSuccessMessage" class="success-message">
+                    {{ registerSuccessMessage }}
+                </div>
 
                 <div v-if="existingUserError" class="error-messages">
                     {{ existingUserError }}
@@ -38,8 +41,8 @@
                     Confirm Password:
                     <input v-model="confirmPassword" type="password" placeholder="Confirm Password" />
                 </label>
-                
-                <button type="submit" >Register</button>
+
+                <button type="submit">Register</button>
             </form>
             <a href="/">Already have an account? Login</a>
         </section>
@@ -60,6 +63,7 @@
             const registerPassword = ref("");
             const confirmPassword = ref("");
             const existingUserError = ref(null);
+            const registerSuccessMessage = ref(null);
             //const loginErrors = reactive({ values: [] });
 
             const isFirstNameValid = computed(() => firstName.value.length > 0);
@@ -79,13 +83,14 @@
             const register = async () => {
                 if (isValidForm.value) {
                     try {
-                        await UserService.register({
+                        const response = await UserService.register({
                             FirstName: firstName.value,
                             LastName: lastName.value,
                             Email: registerEmail.value,
                             Password: registerPassword.value,
                             ConfirmPassword: confirmPassword.value
-                });
+                        });
+                        registerSuccessMessage.value = response.data.message;
                     } catch (error) {
                         existingUserError.value = error.response.data
                     console.error(error);
@@ -110,7 +115,8 @@
                 isConfirmPasswordValid,
                 isValidForm,
                 register,
-                existingUserError
+                existingUserError,
+                registerSuccessMessage
             };
         }
     }
@@ -187,6 +193,10 @@
         button[disabled] {
           background: grey;
           cursor: not-allowed;
+        }
+
+        .success-message {
+            color: green;
         }
 
 </style>

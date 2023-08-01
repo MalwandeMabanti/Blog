@@ -38,22 +38,6 @@ public class AuthenticationController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] Register model)
     {
-
-        //BlogUser existingUser = null;
-        //try
-        //{
-        //    existingUser = await this._userManager.FindByEmailAsync(model.Email);
-        //    Console.WriteLine(existingUser + " Something");
-        //}
-        //catch (Exception ex)
-        //{
-        //    Console.WriteLine(ex.ToString());
-        //}
-
-
-
-        //var existingUser = await this._userManager.FindByEmailAsync(model.Email);
-
         var existingUser = await this._userManager.FindByEmailAsync(model.Email);
 
 
@@ -70,10 +54,16 @@ public class AuthenticationController : ControllerBase
             FirstName = model.FirstName,
             LastName = model.LastName,
         };
-        await _userManager.CreateAsync(user, model.Password);
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest("There was a problem creating the user");
+        }
 
 
-        return Ok(new { token = GenerateJsonWebToken(user) });
+        return Ok(new { token = GenerateJsonWebToken(user), message = "User registered successfully!" });
 
 
     }
@@ -99,7 +89,7 @@ public class AuthenticationController : ControllerBase
 
             return Ok(new { Token = token });
         }
-        return Unauthorized();
+        return Unauthorized("You are not authorized");
     }
 
     private string GenerateJsonWebToken(BlogUser user)
