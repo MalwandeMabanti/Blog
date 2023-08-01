@@ -39,7 +39,11 @@ namespace ToDoList
 
             builder.Services.AddControllers().AddFluentValidation(); 
 
-            builder.Services.AddTransient<IValidator<BlogViewModel>, BlogViewModelValidator>(); 
+            builder.Services.AddTransient<IValidator<BlogViewModel>, BlogViewModelValidator>();
+
+            //builder.Services.AddTransient<IValidator<Register>, RegisterValidator>();
+
+            //builder.Services.AddTransient<IValidator<Login>, LoginValidator>();
 
 
             builder.Services.AddControllers();

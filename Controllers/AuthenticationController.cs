@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,20 +18,27 @@ public class AuthenticationController : ControllerBase
     private readonly SignInManager<BlogUser> _signInManager;
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthenticationController> _logger;
+   
 
-    public AuthenticationController(UserManager<BlogUser> userManager, SignInManager<BlogUser> signInManager, IConfiguration configuration, ILogger<AuthenticationController> logger)
+
+    public AuthenticationController(UserManager<BlogUser> userManager, 
+        SignInManager<BlogUser> signInManager, 
+        IConfiguration configuration, 
+        ILogger<AuthenticationController> logger)
+        
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
         _logger = logger;
+        
     }
 
     // POST api/authentication/register
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] Register model)
     {
-        if (!ModelState.IsValid) 
+        if (!ModelState.IsValid)
         {
             return BadRequest(this.ModelState);
         }
@@ -53,24 +61,25 @@ public class AuthenticationController : ControllerBase
         Console.WriteLine(existingUser);
 
 
-        if (existingUser != null) 
+        if (existingUser != null)
         {
             return this.BadRequest("User exists for this email");
-            
+
         }
 
-        var user = new BlogUser { 
-            UserName = model.Email, 
+        var user = new BlogUser
+        {
+            UserName = model.Email,
             Email = model.Email,
             FirstName = model.FirstName,
-            LastName = model.LastName,  
+            LastName = model.LastName,
         };
         await _userManager.CreateAsync(user, model.Password);
 
-      
-        return Ok(new {token = GenerateJsonWebToken(user)});
-        
-        
+
+        return Ok(new { token = GenerateJsonWebToken(user) });
+
+
     }
 
     // POST api/authentication/login
@@ -90,9 +99,9 @@ public class AuthenticationController : ControllerBase
             var token = GenerateJsonWebToken(user);
 
             _logger.LogInformation($"Token before sending to client: {token}");
-            
 
-            return Ok(new { Token = token});
+
+            return Ok(new { Token = token });
         }
         return Unauthorized();
     }

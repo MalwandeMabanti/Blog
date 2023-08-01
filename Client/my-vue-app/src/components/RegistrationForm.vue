@@ -3,6 +3,11 @@
         <section class="register-section">
             <h2>Register</h2>
             <form @submit.prevent="register">
+
+               
+
+
+
                 <label>
                     First Name:
                     <input v-model="firstName" type="text" placeholder="First Name" />
@@ -43,10 +48,11 @@
             const registerEmail = ref("");
             const registerPassword = ref("");
             const confirmPassword = ref("");
+            //const loginErrors = reactive({ values: [] });
 
             const register = () => {
                 if (registerPassword.value !== confirmPassword.value) {
-                    alert("Passwords do not match!");
+                    //loginErrors.values.push("Passwords do not match!")
                     return;
                 }
 
@@ -57,12 +63,18 @@
                     Password: registerPassword.value,
                     ConfirmPassword: confirmPassword.value
                 })
-                    .then(response => {
-                        console.log(response);
-                    })
-                    .catch(error => {
-                        console.log(error.config, "Config");
-                    });
+                    
+                //.catch(error => {
+                    //if (error.response && error.response.status === 400) {
+                    //    if (Array.isArray(error.response.data)) {
+                    //        // if it's an array of error messages
+                    //        loginErrors.values = { "_general": error.response.data };
+                    //    } else {
+                    //        // if it's an object of field - error messages
+                    //        loginErrors.values = error.response.data;
+                    //    }
+                    //}
+                //});
             };
 
             return {
@@ -71,7 +83,8 @@
                 registerEmail,
                 registerPassword,
                 confirmPassword,
-                register
+                register,
+                //loginErrors
             };
         }
     };
@@ -138,6 +151,11 @@
             margin-top: 20px;
             color: #007BFF;
             text-decoration: none;
+        }
+
+        .error-messages {
+            color: red;
+            margin-bottom: 10px;
         }
 
 </style>
