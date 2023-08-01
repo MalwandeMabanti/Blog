@@ -38,27 +38,23 @@ public class AuthenticationController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] Register model)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(this.ModelState);
-        }
 
-        BlogUser existingUser = null;
-        try
-        {
-            existingUser = await this._userManager.FindByEmailAsync(model.Email);
-            Console.WriteLine(existingUser + " Something");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.ToString());
-        }
+        //BlogUser existingUser = null;
+        //try
+        //{
+        //    existingUser = await this._userManager.FindByEmailAsync(model.Email);
+        //    Console.WriteLine(existingUser + " Something");
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine(ex.ToString());
+        //}
 
 
 
         //var existingUser = await this._userManager.FindByEmailAsync(model.Email);
 
-        Console.WriteLine(existingUser);
+        var existingUser = await this._userManager.FindByEmailAsync(model.Email);
 
 
         if (existingUser != null)

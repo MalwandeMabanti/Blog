@@ -3,32 +3,43 @@
         <section class="register-section">
             <h2>Register</h2>
             <form @submit.prevent="register">
+                
 
-               
+                <div v-if="existingUserError" class="error-messages">
+                    {{ existingUserError }}
+                </div>
 
-
-
+                <p v-if="!isFirstNameValid" class="error-messages">First name is required.</p>
                 <label>
                     First Name:
                     <input v-model="firstName" type="text" placeholder="First Name" />
                 </label>
+
+                <p v-if="!isLastNameValid" class="error-messages">Last name is required.</p>
                 <label>
                     Last Name:
                     <input v-model="lastName" type="text" placeholder="Last Name" />
                 </label>
+
+                <p v-if="!isRegisterEmailValid" class="error-messages">Please enter a valid email.</p>
                 <label>
                     Email:
                     <input v-model="registerEmail" type="email" placeholder="Email" />
                 </label>
+
+                <p v-if="!isRegisterPasswordValid" class="error-messages">Password should be at least 8 characters long.</p>
                 <label>
                     Password:
                     <input v-model="registerPassword" type="password" placeholder="Password" />
                 </label>
+
+                <p v-if="!isConfirmPasswordValid" class="error-messages">Passwords do not match.</p>
                 <label>
                     Confirm Password:
                     <input v-model="confirmPassword" type="password" placeholder="Confirm Password" />
                 </label>
-                <button type="submit">Register</button>
+                
+                <button type="submit" >Register</button>
             </form>
             <a href="/">Already have an account? Login</a>
         </section>
@@ -37,7 +48,7 @@
 
 
 <script>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import UserService from '../services/UserService';
 
     export default {
@@ -48,34 +59,43 @@
             const registerEmail = ref("");
             const registerPassword = ref("");
             const confirmPassword = ref("");
+            const existingUserError = ref(null);
             //const loginErrors = reactive({ values: [] });
 
-            const register = () => {
-                if (registerPassword.value !== confirmPassword.value) {
-                    //loginErrors.values.push("Passwords do not match!")
-                    return;
-                }
+            const isFirstNameValid = computed(() => firstName.value.length > 0);
+            const isLastNameValid = computed(() => lastName.value.length > 0);
+            const isRegisterEmailValid = computed(() => {
+              const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+              return emailRegex.test(registerEmail.value);
+            });
+            const isRegisterPasswordValid = computed(() => registerPassword.value.length >= 8);
+            const isConfirmPasswordValid = computed(() => confirmPassword.value === registerPassword.value);
 
-                UserService.register({
-                    FirstName: firstName.value,
-                    LastName: lastName.value,
-                    Email: registerEmail.value,
-                    Password: registerPassword.value,
-                    ConfirmPassword: confirmPassword.value
-                })
-                    
-                //.catch(error => {
-                    //if (error.response && error.response.status === 400) {
-                    //    if (Array.isArray(error.response.data)) {
-                    //        // if it's an array of error messages
-                    //        loginErrors.values = { "_general": error.response.data };
-                    //    } else {
-                    //        // if it's an object of field - error messages
-                    //        loginErrors.values = error.response.data;
-                    //    }
-                    //}
-                //});
+            const isValidForm = computed(() => isFirstNameValid.value && isLastNameValid.value && isRegisterEmailValid.value && isRegisterPasswordValid.value && isConfirmPasswordValid.value);        
+
+            console.log(isValidForm.value, " With value") 
+            console.log(isValidForm, " Without value") 
+
+            const register = async () => {
+                if (isValidForm.value) {
+                    try {
+                        await UserService.register({
+                            FirstName: firstName.value,
+                            LastName: lastName.value,
+                            Email: registerEmail.value,
+                            Password: registerPassword.value,
+                            ConfirmPassword: confirmPassword.value
+                });
+                    } catch (error) {
+                        existingUserError.value = error.response.data
+                    console.error(error);
+                }
+                }
+              
             };
+
+
+
 
             return {
                 firstName,
@@ -83,11 +103,17 @@
                 registerEmail,
                 registerPassword,
                 confirmPassword,
+                isFirstNameValid,
+                isLastNameValid,
+                isRegisterEmailValid,
+                isRegisterPasswordValid,
+                isConfirmPasswordValid,
+                isValidForm,
                 register,
-                //loginErrors
+                existingUserError
             };
         }
-    };
+    }
 </script>
 
 <style>
@@ -156,6 +182,11 @@
         .error-messages {
             color: red;
             margin-bottom: 10px;
+        }
+
+        button[disabled] {
+          background: grey;
+          cursor: not-allowed;
         }
 
 </style>
