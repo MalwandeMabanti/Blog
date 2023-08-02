@@ -25,7 +25,7 @@ namespace ToDoList.Services
                 blogs = this.context.Set<Blogs>().ToList();
                 cacheService.Set(cacheKey, blogs, TimeSpan.FromMinutes(20));
             }
-            //List<Blogs> blogs = this.context.Set<Blogs>().ToList();
+           
              
             return blogs;
            
