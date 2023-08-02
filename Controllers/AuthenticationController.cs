@@ -63,7 +63,7 @@ public class AuthenticationController : ControllerBase
         }
 
 
-        return Ok(new { token = GenerateJsonWebToken(user), message = "User registered successfully!" });
+        return Ok(new { token = GenerateJsonWebToken(user), message = "User registered successfully! You can now login" });
 
 
     }
@@ -84,12 +84,9 @@ public class AuthenticationController : ControllerBase
         {
             var token = GenerateJsonWebToken(user);
 
-            _logger.LogInformation($"Token before sending to client: {token}");
-
-
             return Ok(new { Token = token });
         }
-        return Unauthorized("You are not authorized");
+        return Unauthorized("You are not a registered user.");
     }
 
     private string GenerateJsonWebToken(BlogUser user)

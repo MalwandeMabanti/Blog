@@ -40,7 +40,7 @@ namespace ToDoList.Services
             var httpHeaders = new BlobHttpHeaders()
             {
                 ContentDisposition = "inline; filename=\"" + fileName + "\"",
-                ContentType = "image/png"
+                ContentType = file.ContentType
                 
             };
 

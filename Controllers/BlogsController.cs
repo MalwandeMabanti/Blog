@@ -89,7 +89,6 @@ namespace ToDoList.Controllers
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             string author = User.FindFirstValue(ClaimTypes.GivenName);
-            //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
             string imageUrl = "";
 
             string containerName = _configuration.GetValue<string>("Azure:BlobStorage:ContainerName");
@@ -134,8 +133,6 @@ namespace ToDoList.Controllers
 
 
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //string userId = "User.FindFirstValue(ClaimTypes.NameIdentifier)";
-
 
             string? imageUrl = null;
 

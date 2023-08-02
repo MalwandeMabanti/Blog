@@ -77,9 +77,6 @@
 
             const isValidForm = computed(() => isFirstNameValid.value && isLastNameValid.value && isRegisterEmailValid.value && isRegisterPasswordValid.value && isConfirmPasswordValid.value);        
 
-            console.log(isValidForm.value, " With value") 
-            console.log(isValidForm, " Without value") 
-
             const register = async () => {
                 if (isValidForm.value) {
                     try {
@@ -122,67 +119,58 @@
     }
 </script>
 
-<style>
+<style scoped>
+
     .container {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        background: #f5f5f5;
+        height: 100vh; 
+        background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
     }
 
     .register-section {
-        width: 500px;
+        display: flex;
+        flex-direction: column;
+        width: 400px; 
         padding: 20px;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        border: 1px solid #ced4da; 
+        border-radius: 4px; 
+        background: rgba(255, 255, 255, 0.8); 
+        backdrop-filter: blur(5px); 
     }
 
         .register-section h2 {
+            text-align: center; 
             margin-bottom: 20px;
-            text-align: center;
         }
 
-        .register-section form {
-            display: flex;
-            flex-direction: column;
+        .register-section form label {
+            display: block;
+            margin-top: 10px;
         }
 
-            .register-section form label {
-                margin-bottom: 10px;
-            }
+        .register-section form input {
+            width: 100%; 
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
 
-            .register-section form input[type="text"],
-            .register-section form input[type="email"],
-            .register-section form input[type="password"] {
-                padding: 10px;
-                border-radius: 4px;
-                border: 1px solid #ddd;
-                outline: none;
-            }
-
-            .register-section form button {
-                padding: 10px 0;
-                margin-top: 20px;
-                background: #007BFF;
-                color: #fff;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-            }
-
-                .register-section form button:hover {
-                    background: #0056b3;
-                }
+        .register-section form button {
+            display: block; 
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
         .register-section a {
-            display: block;
-            text-align: center;
+            display: block; 
             margin-top: 20px;
-            color: #007BFF;
-            text-decoration: none;
+            text-align: center; 
         }
 
         .error-messages {
@@ -190,13 +178,11 @@
             margin-bottom: 10px;
         }
 
-        button[disabled] {
-          background: grey;
-          cursor: not-allowed;
-        }
 
         .success-message {
             color: green;
         }
+
+
 
 </style>

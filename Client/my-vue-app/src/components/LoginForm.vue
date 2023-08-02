@@ -138,67 +138,86 @@
                 isLoginEmailValid,
                 isLoginPasswordValid,
                 unuthorizedUserError
-               
+
 
             };
         }
     };
 </script>
-<style>
+
+<style scoped>
     .container {
-        width: 80%;
-        margin: auto;
-        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: row; /* Arrange children horizontally */
+        width: 100%;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
     }
 
-    h2 {
-        margin-bottom: 20px;
+    .login-section {
+        display: flex;
+        flex-direction: column; /* Arrange children vertically */
+        align-items: start; /* Align items to the start of the parent container */
+        width: 30%; /* Adjust the width as per your needs */
+        padding: 20px;
     }
 
-    form {
-        margin-bottom: 20px;
-    }
-
-        form label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        form input {
+        .login-section form {
             width: 100%;
-            padding: 10px;
             margin-bottom: 20px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
         }
 
-        form button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            .login-section form label {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .login-section form input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+            }
+
+            .login-section form button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+        .login-section a {
+            margin-top: 20px; /* Optional margin for better spacing */
         }
 
-    a {
-        display: inline-block;
-        margin-bottom: 40px;
-        color: #007bff;
-        text-decoration: none;
+    .search-bar {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
     }
 
-    .blog-list-item {
-        border-bottom: 1px solid #dee2e6;
-        padding: 20px 0;
+    .blogs-section {
+        flex: 1; /* Take up the remaining width of the parent container */
+        padding: 20px; /* Optional padding for visual separation */
+    }
+
+    /* Additional styling for your elements (if needed) */
+    .error-messages {
+        color: red;
+    }
+
+    .blog-item {
+        margin-bottom: 20px;
     }
 
     .blog-title {
         cursor: pointer;
-    }
-
-    .blog-details {
-        margin-top: 20px;
     }
 
     .blog-image {
@@ -206,30 +225,9 @@
         height: auto;
     }
 
-    .search-bar {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-    }
-
-    .login-section {
-        margin-bottom: 30px;
-    }
-
-    .blogs-section {
-        margin-top: 30px;
-    }
-
-    header, main {
-        width: 100%;
-        display: block;
-    }
-
-    .error-messages {
-        color: red;
-        margin-bottom: 10px;
+    .blog-author {
+        font-weight: bold;
     }
 </style>
+
 

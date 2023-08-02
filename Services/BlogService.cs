@@ -19,14 +19,14 @@ namespace ToDoList.Services
 
         public List<Blogs> GetAll()
         {
-            //var cacheKey = "GetAllBlogs";
-            //if (!cacheService.TryGetValue(cacheKey, out List<Blogs> blogs))
-            //{
-            //    blogs = this.context.Set<Blogs>().ToList();
-            //    cacheService.Set(cacheKey, blogs, TimeSpan.FromMinutes(20));
-            //}
-            List<Blogs> blogs = this.context.Set<Blogs>().ToList();
-
+            var cacheKey = "GetAllBlogs";
+            if (!cacheService.TryGetValue(cacheKey, out List<Blogs> blogs))
+            {
+                blogs = this.context.Set<Blogs>().ToList();
+                cacheService.Set(cacheKey, blogs, TimeSpan.FromMinutes(20));
+            }
+            //List<Blogs> blogs = this.context.Set<Blogs>().ToList();
+             
             return blogs;
            
         }

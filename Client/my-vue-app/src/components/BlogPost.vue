@@ -1,65 +1,73 @@
 <template>
     <div class="container">
         <header>
-            <h2>Add a Blog</h2>
+
             <div class="user-info">
                 <span class="username">Welcome {{name}}!</span>
                 <button class="logout-button" @click="logout">Logout</button>
             </div>
+
         </header>
 
-        <section>
-            <form class="blog-form" @submit.prevent="addBlog">
+        <div class="content">
 
 
-                <ul v-if="errors.addBlogError.length">
-                    <li v-for="(error, index) in errors.addBlogError" :key="index">{{ error }}</li>
-                </ul>
-                <label>
-                    Title:
-                    <input class="title-input" v-model="newBlog.title" type="text" placeholder="New Blog Title" />
-                </label>
-
-                <label>
-                    Body:
-                    <textarea class="description-input" v-model="newBlog.description" placeholder="New Blog Body"></textarea>
-                </label>
-
-                <label for="image">Select image:</label>
-                <input id="image" type="file" @change="onFileChange" />
-
-                <button type="submit">Add Blog</button>
-            </form>
-        </section>
-
-        <section>
-            <div class="blogs-list" v-for="blog in blogs" :key="blog.id">
-                <h2 class="blog-title" @click="toggleDetails(blog)">{{ blog.title }}</h2>
-                <div class="blog-details" v-if="blog.showDetails">
-                    <input v-if="blog.isEditing" v-model="blog.title" type="text" />
-                    <img v-show="!blog.isEditing" :src="blog.imageUrl" class="blog-image" />
-                    <input v-show="blog.isEditing" type="file" @change="onEditFileChange(blog, $event)" />
-                    <p>{{ blog.isEditing ? '' : blog.description }}</p>
-                    <textarea v-if="blog.isEditing" v-model="blog.description"></textarea>
-                    <div class="blog-actions">
+            <section class="section-left">
+                <h2>Add a Blog</h2>
+                <form class="blog-form" @submit.prevent="addBlog">
 
 
+                    <ul v-if="errors.addBlogError.length"  class="error-text">
+                        <li v-for="(error, index) in errors.addBlogError" :key="index">{{ error }}</li>
+                    </ul>
+                    <label>
+                        Title:
+                        <input class="title-input" v-model="newBlog.title" type="text" placeholder="New Blog Title" />
+                    </label>
 
-                        <ul v-if="errors.updateBlogError[blog.id] && errors.updateBlogError[blog.id].length">
-                            <li v-for="(error, index) in errors.updateBlogError[blog.id]" :key="index">{{ error }}</li>
-                        </ul>
+                    <label>
+                        Body:
+                        <textarea class="description-input" v-model="newBlog.description" placeholder="New Blog Body"></textarea>
+                    </label>
 
+                    <label for="image">Select image:</label>
+                    <input id="image" type="file" @change="onFileChange" />
+
+                    <button type="submit" class="submit-button">Add Blog</button>
+                </form>
+            </section>
+
+            <section class="section-right">
+                <div class="blogs-list" v-for="blog in blogs" :key="blog.id">
+                    <h2 class="blog-title" @click="toggleDetails(blog)">{{ blog.title }}</h2>
+                    <div class="blog-details" v-if="blog.showDetails">
+                        <input v-if="blog.isEditing" v-model="blog.title" type="text" />
+                        <img v-show="!blog.isEditing" :src="blog.imageUrl" class="blog-image" />
+                        <input v-show="blog.isEditing" type="file" @change="onEditFileChange(blog, $event)" />
+                        <p>{{ blog.isEditing ? '' : blog.description }}</p>
+                        <textarea v-if="blog.isEditing" v-model="blog.description"></textarea>
+                        <div class="blog-actions">
 
 
 
-                        <button @click="removeBlog(blog)">Remove Blog</button>
-                        <button @click="blog.isEditing ? updateBlog(blog) : editBlog(blog)">
-                            {{blog.isEditing ? 'Save' : 'Edit'}}
-                        </button>
+                            <ul v-if="errors.updateBlogError[blog.id] && errors.updateBlogError[blog.id].length">
+                                <li v-for="(error, index) in errors.updateBlogError[blog.id]" :key="index">{{ error }}</li>
+                            </ul>
+
+
+
+
+                            <button @click="removeBlog(blog)">Remove Blog</button>
+                            <button @click="blog.isEditing ? updateBlog(blog) : editBlog(blog)">
+                                {{blog.isEditing ? 'Save' : 'Edit'}}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
+
+
     </div>
 </template>
 
@@ -81,7 +89,7 @@
                 file: null
             });
 
-            
+
 
             const errors = reactive({
                 addBlogError: [],
@@ -108,7 +116,7 @@
                     newBlog.file = null;
                 }).catch(error => {
                     if (error.response && error.response.status === 400) {
-                       errors.addBlogError = error.response.data;
+                        errors.addBlogError = error.response.data;
                     }
                 });
             };
@@ -144,43 +152,41 @@
                 let file = e.target.files[0];
                 blog.newImage = file;
                 newBlog.file = true;
-        };
+            };
 
-        const updateBlog = (blog) => {
+            const updateBlog = (blog) => {
 
-            let formData = new FormData();
-            formData.append('id', blog.id);
+                let formData = new FormData();
+                formData.append('id', blog.id);
 
-            formData.append('title', blog.title);
+                formData.append('title', blog.title);
 
-            formData.append('description', blog.description);
+                formData.append('description', blog.description);
 
-            if (newBlog.file) {
-                formData.append('image', blog.newImage);
-                console.log(formData.get('image') , " Your Image");
+                if (newBlog.file) {
+                    formData.append('image', blog.newImage);
                 }
-            else {
-                formData.append('image', "null");
-                console.log(formData.get('image') , " Your Image");
+                else {
+                    formData.append('image', "null");
                 }
 
-            api.updateBlog(formData).then((response) => {
-                const index = blogs.value.findIndex((t) => t.id === response.data.id);
-                if (blogs.value[index]) {
-                    blogs.value.splice(index, 1, response.data);
-                    blogs.value[index].isEditing = false;
-                    blogs.value[index].editingText = '';
-                }
-                if (response.data.imageUrl) {
-                    blog.imageUrl = response.data.imageUrl;
-                    blog.newImage = null;
-                }
-            }).catch(error => {
-               if (error.response && error.response.status === 400) {
-                  errors.updateBlogError[blog.id] = error.response.data;
-                }
-            });
-        };
+                api.updateBlog(formData).then((response) => {
+                    const index = blogs.value.findIndex((t) => t.id === response.data.id);
+                    if (blogs.value[index]) {
+                        blogs.value.splice(index, 1, response.data);
+                        blogs.value[index].isEditing = false;
+                        blogs.value[index].editingText = '';
+                    }
+                    if (response.data.imageUrl) {
+                        blog.imageUrl = response.data.imageUrl;
+                        blog.newImage = null;
+                    }
+                }).catch(error => {
+                    if (error.response && error.response.status === 400) {
+                        errors.updateBlogError[blog.id] = error.response.data;
+                    }
+                });
+            };
 
 
 
@@ -193,7 +199,6 @@
             };
 
             const logout = () => {
-                console.log("Token being removed is:", localStorage.getItem('token'));
                 localStorage.removeItem('token');
                 window.location.href = '/';
             }
@@ -219,41 +224,58 @@
     };
 
 </script>
-<style>
 
+<style scoped>
     .container {
-        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
         margin: auto;
         font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #12c2e9, #c471ed, #f64f59);
+        height: 100vh;
     }
 
     header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 20px;
+        width: 100%;
+        padding: 5px;
         background-color: #f8f9fa;
         border-bottom: 1px solid #dee2e6;
+    }
+
+    .content {
+        display: flex;
+        width: 100%;
+    }
+
+    .section-left, .section-right {
+        flex: 1;
+        padding: 10px;
     }
 
     .user-info {
         display: flex;
         align-items: center;
-        gap: 1rem; 
+        gap: 1rem;
+        justify-content: flex-end; 
     }
 
     .username {
-        font-size: 1.2rem; 
-        font-weight: 600; 
-        color: #3a3a3a; 
-        padding: 0.5rem; 
-        border-radius: 5px; 
-        background-color: #f5f5f5; 
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #3a3a3a;
+        padding: 0.5rem;
+        border-radius: 5px;
+        background-color: #f5f5f5;
     }
-
 
     h2 {
         margin: 0;
+        font-size: 20px;
     }
 
     .logout-button {
@@ -268,6 +290,7 @@
     .blog-form {
         padding: 20px;
         margin-bottom: 20px;
+        width: 200px;
     }
 
         .blog-form label {
@@ -315,4 +338,26 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+
+    .description-input {
+        height: 100px; 
+        width: 100%;
+    }
+
+   
+    .submit-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .error-text {
+        color: red;
+    }
+
 </style>
+
